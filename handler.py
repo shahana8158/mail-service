@@ -1,9 +1,9 @@
 import json
-import boto3
-from botocore.exceptions import ClientError
+# import boto3
+# from botocore.exceptions import ClientError
 
-# Create AWS SES client
-ses_client = boto3.client('ses', region_name="us-east-1")  
+# AWS SES client creation (commented for now)
+# ses_client = boto3.client('ses', region_name="us-east-1")
 
 def send_email(event, context):
     try:
@@ -17,34 +17,21 @@ def send_email(event, context):
         if not receiver_email or not subject or not body_text:
             return {
                 "statusCode": 400,
-                "body": json.dumps({"error": "receiver_email, subject, and body_text are required."})
+                "body": json.dumps({
+                    "error": "receiver_email, subject, and body_text are required."
+                })
             }
 
-        # Sending email using AWS SES
-        try:
-            response = ses_client.send_email(
-                Source="your_verified_email@example.com",  
-                Destination={
-                    "ToAddresses": [receiver_email]
-                },
-                Message={
-                    "Subject": {"Data": subject},
-                    "Body": {
-                        "Text": {"Data": body_text}
-                    }
-                }
-            )
-        except ClientError as e:
-            return {
-                "statusCode": 500,
-                "body": json.dumps({"error": e.response['Error']['Message']})
-            }
+        # Mock email sending (replace with AWS SES later)
+        print(f"[MOCK] Sending email to: {receiver_email}")
+        print(f"Subject: {subject}")
+        print(f"Body: {body_text}")
 
         return {
             "statusCode": 200,
             "body": json.dumps({
-                "message": "Email sent successfully",
-                "message_id": response["MessageId"]
+                "message": f"Email to {receiver_email} with subject '{subject}' received!",
+                "body_text": body_text
             })
         }
 
